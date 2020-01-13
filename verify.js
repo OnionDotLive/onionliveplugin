@@ -32,7 +32,10 @@ postAjax('https://onion.live/api/store/reports/search', 'url$re='+host+'/&type=2
 	obj = JSON.parse(data);
 	if(obj.total > 0) {
 		var sending = browser.runtime.sendMessage({title: "Phishing Mirror", message: "URL: "+host+" has been reported as a phishing mirror.", type: "phishing", icon: "error", host: host});
-		
+		const p = document.createElement("h1");
+		p.textContent = "WARNING: Phishing Mirror !!!";
+		p.setAttribute("style", "background: #2d2d2d; color:red; font-size:4em; text-align: center");
+		document.body.insertBefore(p, document.body.firstChild);
 		sending.then(handleResponse, handleError);
 	}
 });

@@ -1,11 +1,12 @@
 'use strict';
 function handleMessage(request, sender, sendResponse) {
-  browser.browserAction.setPopup({popup: 'popup/popup.html'})
-  browser.browserAction.openPopup();
-  console.log("Message from the content script: " + request.message);
   sendResponse({response: "Response from background script"});
+
   browser.browserAction.setIcon({tabId: sender.tab.id, path: "icons/"+request.icon+".png"});
   var checked = localStorage.getItem(sender.tab.id);
+  localStorage.setItem('value', request.icon);
+  browser.runtime.sendMessage(request).then({})
+
   if(checked != request.host) {
     browser.notifications.create({
 	"type": "basic",
