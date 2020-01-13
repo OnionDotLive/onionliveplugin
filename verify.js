@@ -31,7 +31,7 @@ host = window.location.hostname;
 postAjax('https://onion.live/api/store/reports/search', 'url$re='+host+'/&type=2000349', function(data){
 	obj = JSON.parse(data);
 	if(obj.total > 0) {
-		var sending = browser.runtime.sendMessage({title: "Phishing Mirror", message: "URL: "+host+" has been reported as a phishing mirror.", type: "phishing", icon: "error"});
+		var sending = browser.runtime.sendMessage({title: "Phishing Mirror", message: "URL: "+host+" has been reported as a phishing mirror.", type: "phishing", icon: "error", host: host});
 		
 		sending.then(handleResponse, handleError);
 	}
@@ -42,9 +42,9 @@ postAjax('https://onion.live/api/store/mirrors/search', 'url=http://'+host+'&pag
 	obj = JSON.parse(data);
 	if(obj.total > 0) {
 		if(obj.data[0].official !== "1") {
-			var sending = browser.runtime.sendMessage({title: "Trusted Mirror", message: "URL: "+host+" is listed on our directory.", type: "trusted", icon: "verified"});
+			var sending = browser.runtime.sendMessage({title: "Trusted Mirror", message: "URL: "+host+" is listed on our directory.", type: "trusted", icon: "verified", host: host});
 		} else {
-			var sending = browser.runtime.sendMessage({title: "Trusted Mirror", message: "URL: "+host+" is marked official in our directory.", type: "trusted", icon: "official"});
+			var sending = browser.runtime.sendMessage({title: "Trusted Mirror", message: "URL: "+host+" is marked official in our directory.", type: "trusted", icon: "official", host: host});
 		}
 		sending.then(handleResponse, handleError);
 	}
