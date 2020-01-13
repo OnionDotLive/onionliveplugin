@@ -1,0 +1,43 @@
+{
+
+  "manifest_version": 2,
+  "name": "Onion.Live",
+  "version": "0.0.1",
+
+  "applications": {
+    "gecko": {
+      "id": "admin@onion.live",
+      "strict_min_version": "59.0a1"
+    }
+  },
+
+  "description": "Uses onion.live service to warn against phishing URLs",
+  "icons": {
+    "48": "icons/logo.png"
+  },
+
+  "permissions": [
+    "<all_urls>"
+  ],
+
+  "browser_action": {
+    "default_icon": {
+     "32" : "icons/logo.png"
+    },
+    "default_title": "User script",
+    "default_popup": "popup/user-script.html",
+    "browser_style": true
+  },
+
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["./verify.js"]
+    }
+  ],
+
+  "background": {
+    "scripts": ["background.js"]
+  }
+
+}
