@@ -17,7 +17,8 @@
   },
 
   "permissions": [
-    "<all_urls>"
+    "<all_urls>",
+    "notifications"
   ],
 
   "browser_action": {
@@ -25,7 +26,7 @@
      "32" : "icons/logo.png"
     },
     "default_title": "Onion Live",
-    "default_popup": "popup/popup.html",
+//    "default_popup": "popup/popup.html",
     "browser_style": true
   },
 

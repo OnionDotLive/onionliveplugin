@@ -1,3 +1,14 @@
+//'use strict';
+
+
+function handleResponse(message) {
+  console.log(`Message from the background script:  ${message.response}`);
+}
+
+function handleError(error) {
+  console.log(`Error: ${error}`);
+}
+
 function postAjax(url, data, success) {
 	var params = typeof data == 'string' ? data : Object.keys(data).map(
 		function(k){ return encodeURIComponent(k) + '=' + encodeURIComponent(data[k]) }
@@ -15,18 +26,23 @@ function postAjax(url, data, success) {
 }
 
 host = window.location.hostname;
+
+// Checking for phishing
 postAjax('https://onion.live/api/store/reports/search', 'url$re='+host+'/&type=2000349', function(data){
 	obj = JSON.parse(data);
-//	console.log(obj);
 	if(obj.total > 0) {
-		document.body.innerHTML += '<div style="position:absolute;width:100%;background: #000; text-align: center;z-index:100;top: 0px;"><h1 style="color: red">This site has '+obj.total+' phishing reports</h1></div>';
+		var sending = browser.runtime.sendMessage({title: "Phishing Mirror", message: "URL: "+host+" has been reported as a phishing mirror.", type: "phishing"});
+		
+		sending.then(handleResponse, handleError);
 	}
 });
 
+// Checking if mirror is listed in our DB
 postAjax('https://onion.live/api/store/mirrors/search', 'url=http://'+host+'&page=1&perpage=1', function(data){
 	obj = JSON.parse(data);
-	console.log(obj);
 	if(obj.total > 0) {
-		document.body.innerHTML += '<div style="position:absolute;width:100%;background: #000; text-align: center;z-index:100;top: 0px;"><h1 style="color: red">This is an official mirror</h1></div>';
+		var sending = browser.runtime.sendMessage({title: "Trusted Mirror", message: "URL: "+host+" is listed on our directory.", type: "trusted"});
+		sending.then(handleResponse, handleError);
 	}
 })
+

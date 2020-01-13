@@ -1,21 +1,16 @@
 'use strict';
-
-var registered = null;
-
-function registerScript() {
-  let hosts = "*://*.onion/*";
-  let code = "document.body.innerHTML = '<h1>This page has been eaten</h1>'";
-
-  if (registered) {
-    registered.unregister();
-  }
-
-  registered = await browser.contentScripts.register({
-    matches: hosts,
-    js: [{code}],
-    runAt: "document_idle"
+function handleMessage(request, sender, sendResponse) {
+  browser.browserAction.setPopup({popup: 'popup/popup.html'})
+//  browser.browserAction.enable();
+  browser.browserAction.openPopup();
+  console.log("Message from the content script: " + request.message);
+  sendResponse({response: "Response from background script"});
+  browser.notifications.create({
+	"type": "basic",
+	"iconUrl": browser.extension.getURL("icons/logo.png"),
+	"title": request.title,
+	"message": request.message
   });
-
 }
 
-browser.runtime.onStartup.addListener(registerScript);
+browser.runtime.onMessage.addListener(handleMessage);
