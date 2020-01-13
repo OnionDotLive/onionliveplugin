@@ -24,8 +24,8 @@
     "default_icon": {
      "32" : "icons/logo.png"
     },
-    "default_title": "User script",
-    "default_popup": "popup/user-script.html",
+    "default_title": "Onion Live",
+    "default_popup": "popup/popup.html",
     "browser_style": true
   },
 
