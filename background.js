@@ -15,7 +15,7 @@ function handleMessage(request, sender, sendResponse) {
     localStorage.setItem(sender.tab.id+"-host", request.host);
     localStorage.setItem(sender.tab.id+"-type", request.type);
   }
-  sendResponse({response: "Response from background script"+type});
+  sendResponse({response: "Response from background script"});
 }
 
 browser.runtime.onMessage.addListener(handleMessage);

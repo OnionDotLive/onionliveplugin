@@ -18,7 +18,9 @@
 
   "permissions": [
     "<all_urls>",
-    "notifications"
+    "notifications",
+    "activeTab",
+    "executeScript"
   ],
 
   "browser_action": {
