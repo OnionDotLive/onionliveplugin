@@ -60,7 +60,8 @@ function dispList(){
 }
 
 function handleURL(url){
-
+	var inputTitle = document.querySelector('.url');
+	inputTitle.value = url;
 }
 
 document.addEventListener("DOMContentLoaded", function () {

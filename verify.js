@@ -17,11 +17,11 @@ function newMirr(site, success) {
 }
 
 function handleResponse(message) {
-	//console.log(`Message from the background script:  ${message.response}`);
+	console.log(`Message from the background script:  ${message.response}`);
 }
 
 function handleError(error) {
-	//console.log(`Error: ${error}`);
+	console.log(`Error: ${error}`);
 }
 
 function postAjax(url, data, success) {
