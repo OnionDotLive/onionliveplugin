@@ -1,0 +1,11 @@
+.search {
+	width: 100% !important;
+}
+table {
+	border-collapse: collapse;
+	text-align: center;
+}
+table, th, td {
+	border: 1px solid #000 !important;
+	text-align: center;
+}

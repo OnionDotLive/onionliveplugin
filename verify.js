@@ -94,7 +94,7 @@ if(host) {
 	});
 
 	// Checking if mirror is listed in our DB
-	postAjax('https://onion.live/api/store/mirrors/search', 'url=http://'+host+'&page=1&perpage=1', function(data){
+	postAjax('https://onion.live/api/store/mirrors/search', 'url=http://'+host+'&url$eq$or=https://'+host+'&url$is$or=http://'+host+'/&url$as$or=https://'+host+'/&page=1&perpage=1', function(data){
 		obj = JSON.parse(data);
 		if(obj.total > 0) {
 			if(obj.data[0].site.id) {
