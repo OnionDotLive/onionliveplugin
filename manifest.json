@@ -11,7 +11,7 @@
     }
   },
 
-  "description": "Uses onion.live service to warn against phishing URLs",
+  "description": "Uses onion.live service to warn against phishing URLs and provide a list of safe .onion mirrors for your favorite deepweb / darknet services.",
   "icons": {
     "48": "icons/logo.png"
   },
