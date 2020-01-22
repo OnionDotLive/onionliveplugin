@@ -10,11 +10,14 @@ body {
 table {
 	border-collapse: collapse;
 	text-align: center;
+	width: 100%;
 }
 table, th, td {
+	width: 100%;
 	border: 1px solid #4f4f4f !important;
 	text-align: center;
 	color: #fff;
+	width: auto;
 	max-width: 190px;
 	white-space: nowrap;
 	overflow: hidden;

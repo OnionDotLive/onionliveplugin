@@ -1,18 +1,18 @@
 //'use strict';
 
 function appendMirr(data) {
-	mirr = JSON.parse(data).data[0];
+	mirr = JSON.parse(data)[0];
 	if(mirr.url) {
-		var div = document.createElement("h1");
-		div = '<br/><a style="background: #2d2d2d; color:yellow; text-align: center" href="'+mirr.url+'">Try this working mirror instead</a>';
+		var altelem = document.createElement("h1");
+		altelem = '<br/><a style="background: #2d2d2d !important; color:yellow !important; text-align: center !important; position: fixed !important; width: 100% !important; line-height: 1.5 !important; z-index: 9999 !important; display: block !important; visibility: visible !important; opacity: 1 !important;" href="'+mirr.url+'">Try this working mirror instead</a>';
 		var element = document.getElementById('mainwarn');
-		element.innerHTML += div;
+		element.innerHTML += altelem;
 	}
 }
 
 function newMirr(site, success) {
 	if(site) {
-		postAjax('https://onion.live/api/store/mirrors/search', 'site='+site+"&ctime$ne=60&orderby=official&orderas=DESC&page=1&perpage=1", success);
+		getAjax('https://onion.live/api/public/mirrors?site='+site+'&max=1', '', success);
 	}
 }
 
@@ -24,12 +24,12 @@ function handleError(error) {
 	console.log(`Error: ${error}`);
 }
 
-function postAjax(url, data, success) {
+function getAjax(url, data, success) {
 	var params = typeof data == 'string' ? data : Object.keys(data).map(
 		function(k){ return encodeURIComponent(k) + '=' + encodeURIComponent(data[k]) }
 	).join('&');
 	var xhr = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP");
-	xhr.open('POST', url);
+	xhr.open('GET', url);
 	xhr.onreadystatechange = function() {
 		if (xhr.readyState>3 && xhr.status==200) { success(xhr.responseText); }
 		if (xhr.readyState>3 && xhr.status!==200) { success(xhr.responseText); }
@@ -58,57 +58,66 @@ function checkWorking(url, site) {
 				if(element) {
 					element.parentNode.removeChild(element);
 				}
-				const h1 = document.createElement("h1");
-				h1.textContent = "WARNING: Mirror Disconnected !!!";
-				h1.setAttribute("style", "background: #2d2d2d; color:red; font-size:4em; text-align: center");
-				h1.setAttribute("id", "mainwarn");
-				document.body.insertBefore(h1, document.body.firstChild);
-				newMirr(site.id, appendMirr);
+				const warnelem = document.createElement("h1");
+				warnelem.textContent = "WARNING: Mirror Disconnected !!!";
+				warnelem.setAttribute("style", "background: #2d2d2d !important; color:red !important; font-size:4em !important; text-align: center !important; position: fixed !important; top: 0px !important; width: 100% !important; line-height: 1.5 !important; z-index: 9999 !important; display: block !important; visibility: visible !important; opacity: 1 !important;");
+				warnelem.setAttribute("id", "mainwarn");
+				document.body.insertBefore(warnelem, document.body.firstChild);
+				newMirr(site, appendMirr);
 				send.then(handleResponse, handleError);
 			}
 		}
 	}
-        MrChecker.send(null);
+	MrChecker.send(null);
+}
+
+function embedAlert(mirr) {
+	const warnelem = document.createElement("h1");
+	warnelem.textContent = "WARNING: Phishing Mirror !!!";
+	warnelem.setAttribute("style", "background: #2d2d2d !important; color:red !important; font-size:4em !important; text-align: center !important; position: fixed !important; top: 0px !important; width: 100% !important; line-height: 1.5 !important; z-index: 9999 !important; display: block !important; visibility: visible !important; opacity: 1 !important;");
+	warnelem.setAttribute("id", "mainwarn");
+	document.body.insertBefore(warnelem, document.body.firstChild);
+	if(mirr) {
+		var altelem = document.createElement("h1");
+		altelem = '<br/><a style="background: #2d2d2d !important; color:yellow !important; text-align: center !important; position: fixed !important; width: 100% !important; line-height: 1.5 !important; z-index: 9999 !important; display: block !important; visibility: visible !important; opacity: 1 !important;" href="'+mirr+'">Try this working mirror instead</a>';
+		var element = document.getElementById('mainwarn');
+		element.innerHTML += altelem;
+	}
 }
 
 host = window.location.hostname;
 if(host) {
-	// Checking for phishing
-	postAjax('https://onion.live/api/store/reports/search', 'url$re='+host+'/&type=2000349', function(data){
+	getAjax('https://onion.live/api/public/verify?host='+host, '', function(data){
 		obj = JSON.parse(data);
-		if(obj.total > 0) {
-			if(obj.data[0].site.id) {
-				site = obj.data[0].site;
-				newMirr(site.id, appendMirr);
-				var sending = browser.runtime.sendMessage({title: "Phishing Mirror", message: "URL: "+host+" has been reported as a phishing mirror of "+site.name+".", type: "phishing", icon: "error", host: host});
-			} else {
-				var sending = browser.runtime.sendMessage({title: "Phishing Mirror", message: "URL: "+host+" has been reported as a phishing mirror.", type: "phishing", icon: "error", host: host});
-			}
-			const h1 = document.createElement("h1");
-			h1.textContent = "WARNING: Phishing Mirror !!!";
-			h1.setAttribute("style", "background: #2d2d2d; color:red; font-size:4em; text-align: center");
-			h1.setAttribute("id", "mainwarn");
-			document.body.insertBefore(h1, document.body.firstChild);
-			sending.then(handleResponse, handleError);
+		if(obj.site.id) {
+			site = obj.site.id;
+			window.setInterval(function(){
+				checkWorking(host, site);
+			}, 10000);
 		}
-	});
-
-	// Checking if mirror is listed in our DB
-	postAjax('https://onion.live/api/store/mirrors/search', 'url=http://'+host+'&url$eq$or=https://'+host+'&url$is$or=http://'+host+'/&url$as$or=https://'+host+'/&page=1&perpage=1', function(data){
-		obj = JSON.parse(data);
-		if(obj.total > 0) {
-			if(obj.data[0].site.id) {
-				site = obj.data[0].site;
-				window.setInterval(function(){
-					checkWorking(host, site);
-				}, 10000);
+		// Phishing
+		if(obj.type.code == "1") {
+			var sending = browser.runtime.sendMessage({title: "Phishing Mirror", message: "URL: "+host+" has been reported as a phishing mirror of "+obj.site.name+".", type: "phishing", icon: "error", host: host});
+			mirr = null;
+			if(obj.site.mirror) {
+				mirr = obj.site.mirror;
 			}
-			if(obj.data[0].official !== "1") {
-				var sending = browser.runtime.sendMessage({title: "Trusted Mirror", message: "URL: "+host+" is listed on our directory.", type: "trusted", icon: "verified", host: host});
-			} else {
-				var sending = browser.runtime.sendMessage({title: "Trusted Mirror", message: "URL: "+host+" is marked official in our directory.", type: "trusted", icon: "official", host: host});
-			}
+			embedAlert(mirr);
+			window.setInterval(function(){
+				embedAlert(mirr);
+			}, 10000);
 			sending.then(handleResponse, handleError);
+		// Trusted
+		} else if(obj.type.code == "2") {
+			var sending = browser.runtime.sendMessage({title: "Trusted Mirror", message: "URL: "+host+" is listed on our directory.", type: "trusted", icon: "verified", host: host});
+			sending.then(handleResponse, handleError);
+		// Official
+		} else if(obj.type.code == "3") {
+			var sending = browser.runtime.sendMessage({title: "Official Mirror", message: "URL: "+host+" is marked official in our directory.", type: "trusted", icon: "official", host: host});
+			sending.then(handleResponse, handleError);
+		// Unknown
+		} else {
+
 		}
 	});
 }
