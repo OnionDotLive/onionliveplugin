@@ -90,7 +90,7 @@ window.searchSites = function(search = null) {
 function getCurrentTab() {
 	browser.tabs.query({currentWindow: true, active: true}).then((tabs) => {
 		url = tabs[0].url;
-		if(url && url != 'about:blank') {
+		if(url && url != 'about:blank' && url != 'about:tor') {
 			handleURL(url);
 		} else {
 			dispList(1);
