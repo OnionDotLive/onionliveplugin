@@ -1,0 +1,84 @@
+body {
+	background: #2d2d2d;
+	padding: 10px;
+	max-width: 360px;
+	overflow:hidden;
+}
+a {
+	color: #ffe6cf;
+}
+.input {
+	background: #4f4f4f;
+	border-radius: 0px;
+	border: 0px;
+	color: #fff;
+	padding: 10px;
+	width: 100%;
+	margin: 10px 0px;
+}
+label {
+	color: #fff;
+	line-height: 22px;
+	font-size: 18px;
+	font-weight: bolder;
+	vertical-align: top;
+}
+.content {
+	text-align: center;
+	align-items: center;
+	justify-content: center;
+}
+.center {
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+	width: 50%;
+}
+.apply {
+	background-color: #fb503b;
+	border-color: #fb503b;
+	color: #fff;
+	width: 50%;
+	padding: 10px 16px;
+	font-size: 18px;
+	line-height: 1.3333333;
+	text-align: center;
+	font-weight: bolder;
+	border-color: transparent;
+	border-width: 0;
+}
+.return {
+	display: inline-grid;
+	background-color: #4f4f4f;
+	border-color: #4f4f4f;
+	color: #fff;
+	float: right;
+	width: 50%;
+	padding: 10px 16px;
+	font-size: 18px;
+	line-height: 1.3333333;
+	text-align: center;
+	font-weight: bolder;
+	text-decoration: none;
+}
+#realtime {
+	margin-bottom: 20px;
+	border-radius: 0px;
+}
+.result {
+	width: 100%;
+	margin-bottom: 20px;
+	text-align: center;
+}
+.success {
+	font-size: 24px;
+	font-weight:bold;
+	color:#2cbb2c;
+	text-align: center;
+}
+.error {
+	font-size: 24px;
+	font-weight:bold;
+	color:#FB503B;
+	text-align: center
+}

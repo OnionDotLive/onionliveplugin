@@ -17,7 +17,7 @@ function newMirr(site, success) {
 }
 
 function handleResponse(message) {
-	console.log(`Message from the background script:  ${message.response}`);
+	console.log(`Message from the background script: ${message.response}`);
 }
 
 function handleError(error) {
@@ -85,39 +85,65 @@ function embedAlert(mirr) {
 	}
 }
 
-host = window.location.hostname;
-if(host) {
-	getAjax('https://onion.live/api/public/verify?host='+host, '', function(data){
-		obj = JSON.parse(data);
-		if(obj.site.id) {
-			site = obj.site.id;
-			window.setInterval(function(){
-				checkWorking(host, site);
-			}, 10000);
-		}
-		// Phishing
-		if(obj.type.code == "1") {
-			var sending = browser.runtime.sendMessage({title: "Phishing Mirror", message: "URL: "+host+" has been reported as a phishing mirror of "+obj.site.name+".", type: "phishing", icon: "error", host: host});
-			mirr = null;
-			if(obj.site.mirror) {
-				mirr = obj.site.mirror;
-			}
-			embedAlert(mirr);
-			window.setInterval(function(){
-				embedAlert(mirr);
-			}, 10000);
-			sending.then(handleResponse, handleError);
-		// Trusted
-		} else if(obj.type.code == "2") {
-			var sending = browser.runtime.sendMessage({title: "Trusted Mirror", message: "URL: "+host+" is listed on our directory.", type: "trusted", icon: "verified", host: host});
-			sending.then(handleResponse, handleError);
-		// Official
-		} else if(obj.type.code == "3") {
-			var sending = browser.runtime.sendMessage({title: "Official Mirror", message: "URL: "+host+" is marked official in our directory.", type: "trusted", icon: "official", host: host});
-			sending.then(handleResponse, handleError);
-		// Unknown
-		} else {
+function onError(error) {
+	console.log(`Error: ${error}`);
+}
 
-		}
-	});
+function onGot(item) {
+	let checkevery = "10000";
+	if (item.checkevery) {
+		checkevery = item.checkevery * 1000;
+	}
+	if(checkevery == 0) {
+		return;
+	}
+	window.setInterval(function(){
+		checkWorking(window.host, window.site);
+	}, checkevery);
+	if(item.realtime && item.realtime == true) {
+		verify();
+	}
+}
+
+let getting = browser.storage.sync.get(["checkevery", "realtime"]);
+getting.then(onGot, onError);
+
+function verify() {
+	host = window.location.hostname;
+	if(host) {
+		getAjax('https://onion.live/api/public/verify?host='+host, '', function(data){
+			obj = JSON.parse(data);
+			if(obj.site.id) {
+				site = obj.site.id;
+				window.site = site;
+				window.host = host;
+				let getting = browser.storage.sync.get("checkevery");
+				getting.then(onGot, onError);
+			}
+			// Phishing
+			if(obj.type.code == "1") {
+				var sending = browser.runtime.sendMessage({title: "Phishing Mirror", message: "URL: "+host+" has been reported as a phishing mirror of "+obj.site.name+".", type: "phishing", icon: "error", host: host});
+				mirr = null;
+				if(obj.site.mirror) {
+					mirr = obj.site.mirror;
+				}
+				embedAlert(mirr);
+				window.setInterval(function(){
+					embedAlert(mirr);
+				}, 10000);
+				sending.then(handleResponse, handleError);
+			// Trusted
+			} else if(obj.type.code == "2") {
+				var sending = browser.runtime.sendMessage({title: "Trusted Mirror", message: "URL: "+host+" is listed on our directory.", type: "trusted", icon: "verified", host: host});
+				sending.then(handleResponse, handleError);
+			// Official
+			} else if(obj.type.code == "3") {
+				var sending = browser.runtime.sendMessage({title: "Official Mirror", message: "URL: "+host+" is marked official in our directory.", type: "trusted", icon: "official", host: host});
+				sending.then(handleResponse, handleError);
+			// Unknown
+			} else {
+
+			}
+		});
+	}
 }

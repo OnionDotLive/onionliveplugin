@@ -76,10 +76,10 @@ li {
 	color: #fff;
 	font-size: 16px;
 	line-height: 1.5;
-}        
+}
 @keyframes ldio-8n1y0bpkto4 {
 	0% { transform: rotate(0) }
-	100% { transform: rotate(360deg) }        
+	100% { transform: rotate(360deg) }
 }
 .ldio-8n1y0bpkto4 div { box-sizing: border-box!important }
 .ldio-8n1y0bpkto4 > div {
@@ -111,7 +111,7 @@ li {
 	background: #ffe6cf;
 	border-radius: 50%;
 	box-shadow: 0 204.8px 0 0 #ffe6cf;
-}  
+}
 .ldio-8n1y0bpkto4 > div:nth-child(2) div:after {
 	left: -25.6px;
 	top: 76.80000000000001px;
