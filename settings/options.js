@@ -16,7 +16,7 @@ function saveOptions(e) {
 function restoreOptions() {
 	function setCurrentChoice(result) {
 		document.querySelector("#checkevery").value = result.checkevery || "10";
-		document.querySelector("#realtime").checked = result.realtime || false;
+		document.querySelector("#realtime").checked = result.realtime || true;
 	}
 	function onError(error) {
 		document.querySelector("#result").innerHTML = "<label class='error'>Error: "+error+"</label>";
