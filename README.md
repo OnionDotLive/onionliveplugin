@@ -35,7 +35,7 @@ Tor Browser Extension uses onion.live service to warn against phishing URLs and 
 
 5. Click on “Okay, Got It”
 
-![Onion.Live Extension Click on Okay, Got It](https://onion.live/upload/image/349a73fdfd7734bb4d420afe52a911c1.png)
+   ![Onion.Live Extension Click on Okay, Got It](https://onion.live/upload/image/349a73fdfd7734bb4d420afe52a911c1.png)
 ## Download:
 [Download from mozilla.](https://addons.mozilla.org/en-US/firefox/addon/onion-live/)
 
