@@ -2,7 +2,7 @@
 [![GitHub Release](https://img.shields.io/github/release/tterb/PlayMusic.svg?style=flat)]()
 [![Github All Releases](https://img.shields.io/github/downloads/atom/atom/total.svg?style=flat)]()  
 [![GPLv3 License](https://img.shields.io/badge/License-GPL%20v3-yellow.svg)](https://opensource.org/licenses/)
-[![Active](http://img.shields.io/badge/Status-Active-green.svg)]
+[![Active](http://img.shields.io/badge/Status-Active-green.svg)
 [![Discord Chat](https://img.shields.io/discord/308323056592486420.svg)](https://discord.gg/s23pa2n)
 [![Tweet](https://img.shields.io/twitter/url/https/github.com/tterb/hyde.svg?style=social)](https://twitter.com/intent/tweet?text=Check%20out%20Hyde!%20%E2%9C%A8%20An%20accessible,%20open-source%20markdown%20editor%20for%20any%20user%20E2%9C%A8%20https://github.com/tterb/hyde%20%F0%9F%A4%97)
 [![Twitter Follow](https://img.shields.io/twitter/follow/oniondotlive.svg?style=social)](https://twitter.com/oniondotlive)
