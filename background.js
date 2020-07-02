@@ -4,7 +4,6 @@ function handleMessage(request, sender, sendResponse) {
 	var checked = localStorage.getItem(sender.tab.id+"-host");
 	var type = localStorage.getItem(sender.tab.id+"-type");
     browser.runtime.sendMessage(request).then({});
-    console.log(checked);
 	if(checked != request.host || type != request.type) {
 		browser.notifications.create({
 			"type": "basic",
