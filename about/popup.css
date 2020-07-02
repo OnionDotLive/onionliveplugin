@@ -2,7 +2,7 @@ body {
 	background: #2d2d2d;
 	padding: 10px;
 	max-width: 360px;
-	overflow: hidden;
+	overflow:hidden;
 }
 .search {
 	width: 100% !important;
@@ -23,9 +23,6 @@ table, th, td {
 	overflow: hidden;
 	text-overflow: ellipsis;
 }
-center {
-    text-align: center;
-}
 .urltd {
 	min-width: 290px;
 }
@@ -34,10 +31,6 @@ center {
 }
 a {
 	color: #ffe6cf;
-}
-h2, h3, h4, p, center {
-    color: #ffe6cf;
-    font-weight: 800;
 }
 input {
 	background: #4f4f4f;
@@ -71,7 +64,7 @@ input {
 	font-size: 24px;
 	font-weight:bold;
 	color:#2cbb2c;
-	text-align: center;
+	text-align: center
 }
 .statuslogo {
 	margin: 15px;
@@ -81,7 +74,6 @@ input {
 	margin-left: auto;
 	margin-right: auto;
 	width: 50%;
-    text-align: center;
 }
 li {
 	color: #fff;
@@ -144,23 +136,4 @@ li {
 	transform-origin: 0 0; /* see note above */
 }
 .ldio-8n1y0bpkto4 div { box-sizing: content-box; }
-.left {
-    float: left;
-}
-.right {
-    float: right;
-}
-.bottom-cont {
-    display: inline-block;
-    width: 100%;
-}
-.lgtxt {
-    font-size: 20px;
-    height: 20px;
-    font-weight: 800;
-    color: #ffe6cf;
-    width: auto;
-}
-.icon {
-    padding-top: 5px;
-}
+

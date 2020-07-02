@@ -16,12 +16,24 @@ function getAjax(url, data, success) {
 
 window.verify = function(host) {
 	document.querySelector('.note-container').style.display = "inline-block";
-	getAjax('https://onion.live/api/public/verify?host='+host, '', function(data){
+	getAjax('https://onion.live/api/v2/public/verify?host='+host, '', function(data){
 		obj = JSON.parse(data);
 		if(obj.type.code == "1") {
 			document.querySelector('.mainresults').innerHTML += '<img class="statuslogo" src="error.png" width="100"/><br/><span class="statuswarn status">Phishing Mirror !!!</span>';
 			statusclass='statuswarn';
 		// Trusted
+        } else if(obj.type.code == "4") {
+			document.querySelector('.mainresults').innerHTML += '<img class="statuslogo" src="error.png" width="100"/><br/><span class="statuswarn status">Site Closed !!!</span>';
+			statusclass='statuswarn';
+		// Closed
+        } else if(obj.type.code == "5") {
+			document.querySelector('.mainresults').innerHTML += '<img class="statuslogo" src="error.png" width="100"/><br/><span class="statuswarn status">Ceased by LE !!!</span>';
+			statusclass='statuswarn';
+		// Ceased
+        } else if(obj.type.code == "6") {
+			document.querySelector('.mainresults').innerHTML += '<img class="statuslogo" src="error.png" width="100"/><br/><span class="statuswarn status">Scam site !!!</span>';
+			statusclass='statuswarn';
+		// Scam
 		} else if(obj.type.code == "2") {
 			document.querySelector('.mainresults').innerHTML += '<img class="statuslogo" src="verified.png" width="100"/><br/><span class="statusok status">Trusted Mirror !!!</span>';
 			statusclass='statusok';
@@ -36,7 +48,7 @@ window.verify = function(host) {
 		document.querySelector('.note-container').style.display = "none";
 		if(obj.site.id) {
 			site = obj.site;
-			document.querySelector('.mainresults').innerHTML += '<br/><span class="'+statusclass+' status">'+site.name+'</span>';
+			document.querySelector('.mainresults').innerHTML += '<br/><span class="'+statusclass+' status">'+site.name+'</span><hr/><div class="moreinfo"><div class=" lgtxt center"><a href="https://onion.live/site/'+site.slug+'">More Info </a></div></div>';
 			showsite(site.id);
 		}
 		var input = document.querySelector('.search');
@@ -48,12 +60,13 @@ window.verify = function(host) {
 
 window.showsite = function(site) {
 	document.querySelector('.note-container').style.display = "inline-block";
-	document.querySelector('.mirrs').innerHTML = '<table class="restbl"><thead><tr><td class="urltd">URL</td><td>Uptime</td><td>Connection Time</td></tr></thead><tbody class="mirrbdy"></tbody></table>';
-	getAjax('https://onion.live/api/public/mirrors?site='+site ,'', function(data){
+	document.querySelector('.mirrs').innerHTML = '<table class="restbl"><thead><tr><td class="urltd">URL</td><td class="timetd"> Time </td></tr></thead><tbody class="mirrbdy"></tbody></table>';
+	getAjax('https://onion.live/api/v2/public/mirrors?site='+site ,'', function(data){
 		document.querySelector('.note-container').style.display = "none";
 		obj = JSON.parse(data);
 		for(i=0;i<obj.length;i++) {
-			document.querySelector('.mirrbdy').innerHTML += '<tr><td class="urltd"><a href="'+obj[i].url+'">'+obj[i].url+'</a></td><td>'+obj[i].uptime+'%</td><td>'+obj[i].ctime+'s</td></tr>';
+            time = parseFloat(obj[i].ctime).toFixed(2);
+			document.querySelector('.mirrbdy').innerHTML += '<tr><td class="urltd"><a href="'+obj[i].url+'">'+obj[i].url+'</a></td><td class="timetd">'+time+'s</td></tr>';
 		}
 		if(obj.length === 0) {
 			document.querySelector('.mirrbdy').innerHTML += '<tr><td colspan=4>Site has no working mirrors.</td></tr>';
@@ -63,7 +76,7 @@ window.showsite = function(site) {
 
 window.searchSites = function(search = null) {
 	document.querySelector('.note-container').style.display = "inline-block";
-	getAjax('https://onion.live/api/public/search?q='+search, '', function(data){
+	getAjax('https://onion.live/api/v2/public/search?q='+search, '', function(data){
 		logo = document.querySelector('.statuslogo');
 		if(logo) {
 			logo.parentNode.removeChild(logo);
@@ -71,6 +84,10 @@ window.searchSites = function(search = null) {
 		warn = document.querySelector('.status');
 		if(warn) {
 			warn.parentNode.removeChild(warn);
+		}
+        minfo = document.querySelector('.moreinfo');
+		if(minfo) {
+			minfo.parentNode.removeChild(minfo);
 		}
 		document.querySelector('.note-container').style.display = "none";
 		var resclass = document.querySelector('.results');

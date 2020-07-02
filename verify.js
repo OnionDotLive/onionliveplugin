@@ -12,7 +12,7 @@ function appendMirr(data) {
 
 function newMirr(site, success) {
 	if(site) {
-		getAjax('https://onion.live/api/public/mirrors?site='+site+'&max=1', '', success);
+		getAjax('https://onion.live/api/v2/public/mirrors?site='+site+'&max=1', '', success);
 	}
 }
 
@@ -71,16 +71,16 @@ function checkWorking(url, site) {
 	MrChecker.send(null);
 }
 
-function embedAlert(mirr) {
+function embedAlert(mirr, alert) {
 	const warnelem = document.createElement("h1");
-	warnelem.textContent = "WARNING: Phishing Mirror !!!";
+	warnelem.textContent = "WARNING: "+alert+" !!!";
 	warnelem.setAttribute("style", "background: #2d2d2d !important; color:red !important; font-size:4em !important; text-align: center !important; position: fixed !important; top: 0px !important; width: 100% !important; line-height: 1.5 !important; z-index: 9999 !important; display: block !important; visibility: visible !important; opacity: 1 !important;");
-	warnelem.setAttribute("id", "mainwarn");
+	warnelem.setAttribute("id", "alertwarn");
 	document.body.insertBefore(warnelem, document.body.firstChild);
 	if(mirr) {
 		var altelem = document.createElement("h1");
 		altelem = '<br/><a style="background: #2d2d2d !important; color:yellow !important; text-align: center !important; position: fixed !important; width: 100% !important; line-height: 1.5 !important; z-index: 9999 !important; display: block !important; visibility: visible !important; opacity: 1 !important;" href="'+mirr+'">Try this working mirror instead</a>';
-		var element = document.getElementById('mainwarn');
+		var element = document.getElementById('alertwarn');
 		element.innerHTML += altelem;
 	}
 }
@@ -100,9 +100,25 @@ function onGot(item) {
 	window.setInterval(function(){
 		checkWorking(window.host, window.site);
 	}, checkevery);
+
 	if(item.realtime && item.realtime == true) {
 		verify();
+        localStorage.setItem(host, 1);
 	}
+}
+
+let pversion = 0.1;
+checked = localStorage.getItem("versioncheck");
+if(checked != 1) {
+    getAjax('https://onion.live/api/v2/public/version', '', function(data){
+        obj = JSON.parse(data);
+        version = obj.version;
+        if(pversion < version) {
+            var sending = browser.runtime.sendMessage({title: "Plugin Outdated", message: "Version "+version+" is now available for download. Please update to latest version to ensure maximum safety.", type: "trusted", icon: "official", host: 'version'});
+            sending.then(handleResponse, handleError);
+        }
+        localStorage.setItem("versioncheck", 1);
+    });
 }
 
 let getting = browser.storage.sync.get(["checkevery", "realtime"]);
@@ -111,7 +127,7 @@ getting.then(onGot, onError);
 function verify() {
 	host = window.location.hostname;
 	if(host) {
-		getAjax('https://onion.live/api/public/verify?host='+host, '', function(data){
+		getAjax('https://onion.live/api/v2/public/verify?host='+host, '', function(data){
 			obj = JSON.parse(data);
 			if(obj.site.id) {
 				site = obj.site.id;
@@ -127,12 +143,48 @@ function verify() {
 				if(obj.site.mirror) {
 					mirr = obj.site.mirror;
 				}
-				embedAlert(mirr);
+				embedAlert(mirr, "Phishing Mirror");
 				window.setInterval(function(){
-					embedAlert(mirr);
+					embedAlert(mirr, "Phishing Mirror");
 				}, 10000);
 				sending.then(handleResponse, handleError);
-			// Trusted
+			// Closed
+            } else if(obj.type.code == "4") {
+				var sending = browser.runtime.sendMessage({title: "Site closed", message: obj.site.name+" has been closed.", type: "phishing", icon: "error", host: host});
+				mirr = null;
+				if(obj.site.mirror) {
+					mirr = obj.site.mirror;
+				}
+				embedAlert(mirr, "Site Closed");
+				window.setInterval(function(){
+					embedAlert(mirr, "Site Closed");
+				}, 10000);
+				sending.then(handleResponse, handleError);
+			// Ceased
+            } else if(obj.type.code == "5") {
+				var sending = browser.runtime.sendMessage({title: "Ceased by LE", message: obj.site.name+" has been ceased by Law Enforcement.", type: "phishing", icon: "error", host: host});
+				mirr = null;
+				if(obj.site.mirror) {
+					mirr = obj.site.mirror;
+				}
+				embedAlert(mirr, "Ceased by LE");
+				window.setInterval(function(){
+					embedAlert(mirr, "Ceased by LE");
+				}, 10000);
+				sending.then(handleResponse, handleError);
+			// Closed
+            } else if(obj.type.code == "6") {
+				var sending = browser.runtime.sendMessage({title: "SCAM ALERT", message: obj.site.name+" is a scam or harmful. Please exit immediately.", type: "phishing", icon: "error", host: host});
+				mirr = null;
+				if(obj.site.mirror) {
+					mirr = obj.site.mirror;
+				}
+				embedAlert(mirr, "Scam site");
+				window.setInterval(function(){
+					embedAlert(mirr, "Scam site");
+				}, 10000);
+				sending.then(handleResponse, handleError);
+            // Trusted
 			} else if(obj.type.code == "2") {
 				var sending = browser.runtime.sendMessage({title: "Trusted Mirror", message: "URL: "+host+" is listed on our directory.", type: "trusted", icon: "verified", host: host});
 				sending.then(handleResponse, handleError);
