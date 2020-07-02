@@ -31,10 +31,10 @@ Tor Browser Extension uses onion.live service to warn against phishing URLs and 
 ## Download:
 [Download from mozilla.](https://addons.mozilla.org/en-US/firefox/addon/onion-live/)
 
-[Direct Download.](https://github.com/OnionDotLive/onionliveplugin/raw/master/web-ext-artifacts/onion.live-0.0.5.zip)
+[Direct Download.](https://github.com/OnionDotLive/onionliveplugin/raw/master/web-ext-artifacts/onion.live-0.1.zip)
 
 [Source Code.](https://github.com/OnionDotLive/onionliveplugin)
 ## Information
-Latest Version: 0.0.5
+Latest Version: 0.1
 
 License: GNU General Public License (GPLv3)
